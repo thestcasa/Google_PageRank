@@ -9,7 +9,7 @@ def multiply_Ax(graph: Graph, x: np.ndarray):
     n = graph.n
     y = np.zeros(n, dtype=float)
 
-    for src in range(n - 1):
+    for src in range(n):
         n_out = graph.out_degree[src]
 
         # dangling node check
@@ -19,8 +19,8 @@ def multiply_Ax(graph: Graph, x: np.ndarray):
         contrib = x[src] / n_out
         out_neigh = graph.out_neighbors[src]
 
-        for n in out_neigh:
-            y[n] += contrib
+        for dst in out_neigh:
+            y[dst] += contrib
 
     return y
 
@@ -49,7 +49,7 @@ def pagerank(
     # loop
     for _ in range(max_iter):
         Ax = multiply_Ax(graph, x)
-        dangling_mass = sum(x[dangling_mask])
+        dangling_mass = x[dangling_mask].sum()
 
         # compute new_x
         new_x = one_minus_m * Ax
